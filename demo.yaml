@@ -1,0 +1,13 @@
+Master:
+  Image: dcurrie/jenkins
+  ImageTag: lts-alpine-plugins
+  ImagePullPolicy: IfNotPresent
+  HealthProbesReadinessTimeout: 10
+  ServiceType: NodePort
+  InstallPlugins:
+  JavaOpts: >
+    -Dhudson.slaves.NodeProvisioner.initialDelay=0
+    -Dhudson.slaves.NodeProvisioner.MARGIN=50
+    -Dhudson.slaves.NodeProvisioner.MARGIN0=0.85
+Agent:
+  ImageTag: alpine
