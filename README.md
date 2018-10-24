@@ -31,5 +31,6 @@ minikube service cd-jenkins
 1. Create a pipeline job with a fork of this repository as the Git source for the pipeline.
 2. Clicking *Build now* will push an image to the registry.
 3. Run `helm create hello`.
-4. Replace `Jenkinsfile` with `Jenkinsfile.cd`.
-5. Push changes and re-build.
+4. Modify `service.type` in `hello/values.yaml` from `ClusterIP` to `NodePort`.
+5. Replace `Jenkinsfile` with `Jenkinsfile.cd`.
+6. Push changes and re-build.
