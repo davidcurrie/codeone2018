@@ -28,9 +28,11 @@ podTemplate(
                 sh 'CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main .'
             }
         }
-        def repository = "registry.kube-system:80/hello"
+        def repository
         stage ('Docker') {
             container ('kaniko') {
+                def registryIp = sh(script: 'getent hosts registry.kube-system | awk \'{ print $1 ; exit }\'', returnStdout: true).trim()
+                repository = "${registryIp}:80/hello"
                 sh "executor -f `pwd`/Dockerfile -c `pwd` -d ${repository}:${commitId} --skip-tls-verify --insecure"
             }
         }
