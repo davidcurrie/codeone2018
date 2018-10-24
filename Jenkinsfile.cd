@@ -15,6 +15,12 @@ podTemplate(
             image: 'dcurrie/kaniko:alpine',
             ttyEnabled: true,
             command: 'cat'
+        ),
+        containerTemplate(
+            name: 'helm', 
+            image: 'lachlanevenson/k8s-helm:v2.11.0',
+            ttyEnabled: true,
+            command: 'cat'
         )
     ]
 ) {
@@ -32,6 +38,12 @@ podTemplate(
         stage ('Docker') {
             container ('kaniko') {
                 sh "executor -f `pwd`/Dockerfile -c `pwd` -d ${repository}:${commitId} --skip-tls-verify --insecure"
+            }
+        }
+        stage ('Deploy') {
+            container ('helm') {
+                sh """helm init --client-only --skip-refresh
+                helm upgrade --install --wait --set image.repository=${repository},image.tag=${commitId} hello hello"""
             }
         }
     }
