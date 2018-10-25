@@ -1,6 +1,6 @@
 # Jenkins/Kube/Helm demo for Code One 2018
 
-Demo project used at Oracle Code One 2018 showing deployment of Jenkins to Kubernetes with Helm and deployment from Jenkins to Kubernetes using Helm. The associated presentation can be found on [SlideShare](https://www.slideshare.net/davidcurrie/continuous-delivery-to-kubernetes-with-jenkins-and-helm-120590081).
+Demo project used at Oracle Code One 2018 showing deployment of Jenkins to Kubernetes with Helm and deployment from Jenkins to Kubernetes using Helm. The associated presentation can be found on [SlideShare](https://www.slideshare.net/davidcurrie/continuous-delivery-to-kubernetes-with-jenkins-and-helm-120590081). The Jenkins X demo video is available [here](https://drive.google.com/file/d/1XMXQNX2R0hQsQ60BUBxs64ELdJvjqzrl/view?usp=sharing).
 
 ## Pre-reqs
 
