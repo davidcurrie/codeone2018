@@ -1,22 +1,33 @@
 def label = "codeone-${UUID.randomUUID().toString()}"
-podTemplate(
-    name: 'codeone',
-    label: label,
-    inheritFrom: 'default',
-    containers: [
-        containerTemplate(
-            name: 'golang', 
-            image: 'golang:1.11-alpine',
-            ttyEnabled: true,
-            command: 'cat'
-        ),
-        containerTemplate(
-            name: 'kaniko', 
-            image: 'dcurrie/kaniko:alpine',
-            ttyEnabled: true,
-            command: 'cat'
-        )
-    ]
+podTemplate(name: 'codeone', label: label, yaml: """
+kind: Pod
+metadata:
+  name: codeone
+spec:
+  containers:
+  - name: golang
+    image: golang:1.11-alpine
+    imagePullPolicy: Always
+    command:
+    - cat
+    tty: true
+  - name: kaniko
+    image: dcurrie/kaniko:alpine
+    imagePullPolicy: Always
+    command:
+    - cat
+    tty: true
+    volumeMounts:
+      - name: jenkins-docker-cfg
+        mountPath: /root
+  volumes:
+  - name: jenkins-docker-cfg
+    secret:
+      secretName: regcred
+      items:
+      - key: .dockerconfigjson
+        path: .docker/config.json
+"""
 ) {
     node(label) {
         def commitId
@@ -31,9 +42,8 @@ podTemplate(
         def repository
         stage ('Docker') {
             container ('kaniko') {
-                def registryIp = sh(script: 'getent hosts registry.kube-system | awk \'{ print $1 ; exit }\'', returnStdout: true).trim()
-                repository = "${registryIp}:80/hello"
-                sh "executor -f `pwd`/Dockerfile -c `pwd` -d ${repository}:${commitId} --skip-tls-verify --insecure"
+                repository = "index.docker.io/dcurrie/hello"
+                sh "executor -f `pwd`/Dockerfile -c `pwd` -d ${repository}:${commitId} --skip-tls-verify"
             }
         }
     }
